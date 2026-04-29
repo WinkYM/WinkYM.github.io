@@ -268,10 +268,10 @@
 <body>
 
 <div class="main-content">
-    <h1>💕 生日倒计时 🎁</h1>
+    <h1>💕生日倒计时🎁</h1>
     <p>期待与你的重逢❤️I Miss You😭</p>
     <div class="card-info">
-        <p>🎉独属于你的惊喜：<strong id="displayTargetDate">加载中...</strong></p>
+        <p>🎉独属于你的惊喜：<br><strong id="displayTargetDate">加载中...</strong></p>
         <p>⏳请耐心等待倒计时归零😄</p>
         <p>当然你也可以直接点击前往，但我完全不建议❌️</p>
     </div>
@@ -306,10 +306,10 @@
     (function() {
         // ---------- 配置区域 ----------
         const TARGET_YEAR = 2026;
-        const TARGET_MONTH = 4;      // 5月 (0=1月,4=5月)
-        const TARGET_DAY = 1;
-        const TARGET_HOUR = 0;
-        const TARGET_MINUTE = 0;
+        const TARGET_MONTH = 3;      // 5月 (0=1月,4=5月)
+        const TARGET_DAY = 29;
+        const TARGET_HOUR = 21;
+        const TARGET_MINUTE = 25;
         const TARGET_SECOND = 0;
         const DOUYIN_VIDEO_URL = "https://www.douyin.com/video/7603225614669966438";
         
@@ -332,15 +332,61 @@
         let hasAutoRedirected = false;
         let countdownInterval = null;
         
-        function redirectToDouyin() {
-            if (!DOUYIN_VIDEO_URL) {
-                console.warn("未配置抖音视频链接");
-                alert("未配置有效的抖音视频链接，请联系管理员配置。");
-                return;
-            }
-            window.open(DOUYIN_VIDEO_URL, '_blank',alert("😊噜噜宝宝祝你生日快乐🎂"));
-        }
+        // function redirectToDouyin() {
+        //     if (!DOUYIN_VIDEO_URL) {
+        //         console.warn("未配置抖音视频链接");
+        //         alert("未配置有效的抖音视频链接，请联系管理员配置。");
+        //         return;
+        //     }
+        //     window.location.href = DOUYIN_VIDEO_URL;
+        // }
         
+        // 显示自定义祝福弹窗
+function showBirthdayBlessing(callback) {
+    // 创建弹窗元素
+    const blessingModal = document.createElement('div');
+    blessingModal.innerHTML = `
+        <div style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); display:flex; justify-content:center; align-items:center; z-index:10000;">
+            <div style="background:linear-gradient(145deg, #ff9a9e, #fad0c4); border-radius:60px; padding:2rem; text-align:center; max-width:350px; animation:bounceIn 0.4s ease;">
+                <h2 style="font-size:2rem; margin-bottom:1rem; color:#fff;">😊 噜噜宝贝来</h2>
+                <p style="font-size:1.5rem; margin-bottom:1.5rem; color:#fff; font-weight:bold;">祝你生日快乐啦 🎂</p>
+                <button id="blessingConfirmBtn" style="background:#ff6b6b; border:none; padding:0.8rem 2rem; border-radius:50px; font-size:1.2rem; font-weight:bold; color:white; cursor:pointer;">确定</button>
+            </div>
+        </div>
+    `;
+    document.body.appendChild(blessingModal);
+    
+    // 添加动画样式
+    const style = document.createElement('style');
+    style.textContent = `
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            80% { transform: scale(1.05); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+    `;
+    document.head.appendChild(style);
+    
+    // 绑定确定按钮事件
+    document.getElementById('blessingConfirmBtn').onclick = function() {
+        document.body.removeChild(blessingModal);
+        if (callback) callback();
+    };
+}
+
+// 修改跳转函数
+function redirectToDouyin() {
+    if (!DOUYIN_VIDEO_URL) {
+        console.warn("未配置抖音视频链接");
+        alert("未配置有效的抖音视频链接，请联系管理员配置。");
+        return;
+    }
+    
+    // 显示祝福弹窗，用户点击确定后再跳转
+    showBirthdayBlessing(function() {
+        window.open(DOUYIN_VIDEO_URL, '_blank');
+    });
+}
         function updateCountdown() {
             const now = new Date();
             const targetTime = targetDateObj.getTime();
